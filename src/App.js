@@ -5,43 +5,12 @@ import { closeMaxProductModal, toogleSideBar } from "./store/actions";
 import MainLayout from "./Layouts/MainLayout";
 import * as Maincontainers from "./views";
 import "./App.css";
- 
- 
-
-
-
- 
-
- 
-
-
-
- 
- 
-
-
-
+import Orders from "./components/Orders/Orders.jsx";
 
 class App extends Component {
   render() {
     return (
-
       <div className="App">
-
-
- 
-
-
- 
- 
-
-
- 
-
-
-      
-
-
         <MainLayout
           storeCartCount={this.props.storeCartItemsCount}
           showModal={this.props.showModalProp}
@@ -50,14 +19,15 @@ class App extends Component {
           showSideBar={this.props.showSideNavigationProp}
           toggleSideBar={this.props.toggleSideBarProp}
         >
-          <switch >
+          <switch>
+            <Route
+              path={"/DashboardPage"}
+              exact
+              component={Maincontainers.DashboardPage}
+            />
 
-  
-          
-          <Route path={"/DashboardPage"} exact component={Maincontainers.DashboardPage} />
-        
-          <Route path={"/login"} exact component={Maincontainers.LoginPage} />
- 
+            <Route path={"/login"} exact component={Maincontainers.LoginPage} />
+
             <Route path={"/"} exact component={Maincontainers.HomePage} />
             <Route path={"/all"} exact component={Maincontainers.AllPage} />
             <Route
@@ -65,11 +35,9 @@ class App extends Component {
               component={Maincontainers.ProductCategoriesPage}
             />
 
-
-              
-             
             <Route path={"/sale"} component={Maincontainers.SalesPage} />
             <Route path={"/cart"} component={Maincontainers.CartPage} />
+            <Route path={"/orders"} component={Maincontainers.OrdersPage} />
             <Route path={"/checkout"} component={Maincontainers.CheckoutPage} />
             <Route
               path={"/product/:productSlug"}
@@ -104,11 +72,5 @@ const mapDispatchToProps = (dispatch) => {
     toggleSideBarProp: () => dispatch(toogleSideBar()),
   };
 };
-
-
- 
-
-
-
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

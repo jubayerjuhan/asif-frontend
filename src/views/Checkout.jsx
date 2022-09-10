@@ -98,13 +98,17 @@ class Checkout extends Component {
 
     // todo
 
-    //         create a stripe token .. 
- 
-
-     
-
-    
-    this.props.confirmOrderProp(order);
+    //         create a stripe token ..
+    fetch("http://localhost:4001/insert-order", {
+      method: "POST",
+      body: JSON.stringify(order),
+    })
+      .then((res) => {
+        this.props.confirmOrderProp(order);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   setPromoCode = (event) => {
@@ -188,7 +192,6 @@ class Checkout extends Component {
             checkoutCartCount={cartProduct.quantity}
             checkoutCartSize={cartProduct.size}
             currency={this.props.usedCurrencyProp}
-            
           />
         );
       }
