@@ -14,6 +14,8 @@ import PropTypes from "prop-types";
 import formValidator from "../Utility/formValidation";
 import { CardElement, injectStripe } from "react-stripe-elements";
 import { currencyToUse } from "../Utility/currency";
+import axios from "axios";
+import { client } from "../client.js";
 
 class Checkout extends Component {
   state = {
@@ -82,7 +84,7 @@ class Checkout extends Component {
     this.setState({ paymentMethod: event.target.value });
   };
 
-  confirmOrderHandler = (event) => {
+  confirmOrderHandler = (event, total) => {
     event.preventDefault();
     let order = {};
     order["cart"] = this.props.cartProductsProps;
@@ -95,20 +97,15 @@ class Checkout extends Component {
     order["currency"] = this.props.usedCurrencyProp;
     order["paymentMethod"] = this.state.paymentMethod;
     order["deliveryOption"] = this.state.usedDeliveryOption;
+    order["total"] = total;
 
     // todo
 
     //         create a stripe token ..
-    fetch("http://localhost:4001/insert-order", {
-      method: "POST",
-      body: JSON.stringify(order),
-    })
-      .then((res) => {
-        this.props.confirmOrderProp(order);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    client.post("/insert-order", order).then((res) => {
+      console.log(res);
+      this.props.confirmOrderProp(order);
+    });
   };
 
   setPromoCode = (event) => {
@@ -317,7 +314,9 @@ class Checkout extends Component {
               <button
                 disabled={!(this.state.makeOrder && this.state.correctCardInfo)}
                 className="btn shop-btn-secondary btn-lg btn-block"
-                onClick={(event) => this.confirmOrderHandler(event)}
+                onClick={(event) =>
+                  this.confirmOrderHandler(event, shoppingTotal)
+                }
               >
                 Confirm Order
               </button>
